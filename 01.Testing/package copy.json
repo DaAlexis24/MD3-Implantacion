@@ -1,0 +1,31 @@
+{
+    "name": "9.node",
+    "version": "1.0.0",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "build": "tsc -w",
+        "test": "vitest run",
+        "test:c": "vitest run --coverage",
+        "lint": "eslint . --ext .ts",
+        "start": "node ./dist/sample.js",
+        "start:dev": "cross-env NODE_ENV=dev node ./dist/sample.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "prettier": {
+        "singleQuote": true
+    },
+    "devDependencies": {
+        "vitest": "^3.0.4"
+    },
+    "dependencies": {
+        "commander": "^13.1.0",
+        "cross-env": "^7.0.3",
+        "dotenv": "^16.4.7",
+        "inquirer": "^12.4.1",
+        "minimist": "^1.2.8"
+    }
+}
