@@ -3,6 +3,7 @@ import createDebug from 'debug';
 import { UsersController } from '../controllers/users.controller';
 import { Role } from '@prisma/client';
 import { AuthInterceptor } from '../middleware/auth.interceptor';
+import { FileInterceptor } from '../middleware/file.interceptor';
 const debug = createDebug('movies:router:users');
 
 // Los métodos del controller no son arrow functions
@@ -10,6 +11,7 @@ const debug = createDebug('movies:router:users');
 
 export const createUsersRouter = (
     authInterceptor: AuthInterceptor,
+    fileInterceptor: FileInterceptor,
     usersController: UsersController,
 ) => {
     debug('Ejecutando createFilmsRouter');

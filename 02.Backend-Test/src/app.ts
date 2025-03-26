@@ -24,6 +24,8 @@ import { createReviewsRouter } from './router/reviews.router.js';
 import { CategoryRepo } from './repo/categories.repository.js';
 import { CategoriesController } from './controllers/categories.controller.js';
 import { createCategoriesRouter } from './router/categories.router.js';
+import { FileInterceptor } from './middleware/file.interceptor.js';
+import { PrismaClient } from '@prisma/client';
 
 const debug = createDebug('movies:app');
 debug('Loaded module');
@@ -56,20 +58,25 @@ export const createApp = () => {
     app.use(express.static(publicPath));
 
     // Controllers, Repositories... instances
-
-    const filmsRepo = new FilmRepo();
+    const prisma = new PrismaClient();
+    const filmsRepo = new FilmRepo(prisma);
     const usersRepo = new UsersRepo();
     const reviewsRepo: ReviewRepo = new ReviewRepo();
     const categoriesRepo = new CategoryRepo();
 
     const authInterceptor = new AuthInterceptor(reviewsRepo);
+    const fileInterceptor = new FileInterceptor();
     const filmsController = new FilmsController(filmsRepo);
     const usersController = new UsersController(usersRepo);
     const reviewsController = new ReviewsController(reviewsRepo);
     const categoriesController = new CategoriesController(categoriesRepo);
 
     const filmsRouter = createFilmsRouter(authInterceptor, filmsController);
-    const usersRouter = createUsersRouter(authInterceptor, usersController);
+    const usersRouter = createUsersRouter(
+        authInterceptor,
+        fileInterceptor,
+        usersController,
+    );
     const reviewsRouter = createReviewsRouter(
         authInterceptor,
         reviewsController,
