@@ -75,7 +75,6 @@ export class FilmsController {
         debug('setCategory');
         try {
             const { id, name: category } = req.params;
-            console.log(id, category);
             const film = await this.repoFilms.toggleCategory(id, category);
             res.json(this.makeResponse([film]));
         } catch (error) {

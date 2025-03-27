@@ -1,16 +1,14 @@
 import { FilmRepo } from './films.repository';
 import { vi } from 'vitest';
+const mockFilm = { categories: [{ name: 'Action' }] };
+const mockFilms = [mockFilm];
 const mockPrisma = {
     film: {
-        findMany: vi.fn().mockResolvedValue([]),
-        findUniqueOrThrow: vi.fn().mockResolvedValue({
-            categories: [],
-        }),
-        create: vi.fn().mockResolvedValue({}),
-        update: vi.fn().mockResolvedValue({
-            categories: ['Action'],
-        }),
-        delete: vi.fn().mockResolvedValue({}),
+        findMany: vi.fn().mockResolvedValue(mockFilms),
+        findUniqueOrThrow: vi.fn().mockResolvedValue(mockFilm),
+        create: vi.fn().mockResolvedValue(mockFilm),
+        update: vi.fn().mockResolvedValue(mockFilm),
+        delete: vi.fn().mockResolvedValue(mockFilm),
     },
 };
 // vi.mock('@prisma/client', () => ({
@@ -44,7 +42,7 @@ describe('Given class FilmRepo', () => {
             // Act
             const result = await filmRepo.read();
             // Assert
-            expect(result).toStrictEqual([]);
+            expect(result).toStrictEqual(mockFilms);
             expect(mockPrisma.film.findMany).toHaveBeenCalled();
         });
     });
@@ -53,16 +51,18 @@ describe('Given class FilmRepo', () => {
             // Act
             const result = await filmRepo.readById('1');
             // Assert
-            expect(result).toStrictEqual({ categories: [] });
+            expect(result).toStrictEqual(mockFilm);
             expect(mockPrisma.film.findUniqueOrThrow).toHaveBeenCalled();
         });
     });
     describe('When create is called', () => {
         test('Then it should return a Film', async () => {
             // Act
-            const result = await filmRepo.create({});
+            const result = await filmRepo.create({
+                categories: [{ name: 'Action' }],
+            });
             // Assert
-            expect(result).toStrictEqual({});
+            expect(result).toStrictEqual(mockFilm);
             expect(mockPrisma.film.create).toHaveBeenCalled();
         });
     });
@@ -71,16 +71,25 @@ describe('Given class FilmRepo', () => {
             // Act
             const result = await filmRepo.update('1', {});
             // Assert
-            expect(result).toStrictEqual({ categories: ['Action'] });
+            expect(result).toStrictEqual(mockFilm);
             expect(mockPrisma.film.update).toHaveBeenCalled();
         });
     });
-    describe('When toggleCategory is called', () => {
+    describe('When toggleCategory is called with a existing category', () => {
         test('Then it should return a Film', async () => {
             // Act
             const result = await filmRepo.toggleCategory('1', 'Action');
             // Assert
-            expect(result).toStrictEqual({ categories: ['Action'] });
+            expect(result).toStrictEqual(mockFilm);
+            expect(mockPrisma.film.update).toHaveBeenCalled();
+        });
+    });
+    describe('When toggleCategory is called with a inexistent category', () => {
+        test('Then it should return a Film', async () => {
+            // Act
+            const result = await filmRepo.toggleCategory('1', 'Drama');
+            // Assert
+            expect(result).toStrictEqual(mockFilm);
             expect(mockPrisma.film.update).toHaveBeenCalled();
         });
     });
@@ -89,7 +98,7 @@ describe('Given class FilmRepo', () => {
             // Act
             const result = await filmRepo.delete('1');
             // Assert
-            expect(result).toStrictEqual({});
+            expect(result).toStrictEqual(mockFilm);
             expect(mockPrisma.film.delete).toHaveBeenCalled();
         });
     });

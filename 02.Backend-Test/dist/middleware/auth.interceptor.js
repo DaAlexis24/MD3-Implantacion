@@ -2,7 +2,6 @@ import { AuthService } from '../services/auth.service.js';
 import { HttpError } from '../types/http-error.js';
 import createDebug from 'debug';
 import { Role } from '@prisma/client';
-//  { Role } from '@prisma/client';
 const debug = createDebug('movies:interceptor:auth');
 export class AuthInterceptor {
     repoReviews;
@@ -21,7 +20,9 @@ export class AuthInterceptor {
         }
         const token = authorization.split(' ')[1];
         try {
+            console.log('Service', AuthService);
             const payload = await AuthService.verifyToken(token);
+            console.log('Payload', payload);
             // Añado datos a req disponibles para siguientes etapas
             // Previamente he extendido la interfaz Request en express
             req.user = payload;

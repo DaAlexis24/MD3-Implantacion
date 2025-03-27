@@ -22,3 +22,11 @@ Tienen mecanismos que nos permiten configurar la función para que hagan y se co
 - Luego de ello ejecuta `npx prisma generate` para el cliente de Prisma y así no tener problemas de importaciones
 - Siguiente, enciende tu servidor MySQL
 - Para finalizar, en la terminal escribe `npx prisma migrate dev --name init` para generar la migración y así obtener nuestra BBDD gracias a Prisma
+
+## Mockear un módulo
+
+Esto lo hacemos utilizando la variable **vi** que importamos de Vitest, en específico `vi.mock(módulo_que_quiero mockear)`
+
+## Diferencias entre un mock y un spy
+
+El spy solo vigila la función pero dejando que funcione normalmente, el mock no solo vigila ya que también reemplaza a la función
